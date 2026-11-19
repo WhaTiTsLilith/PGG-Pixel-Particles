@@ -168,8 +168,13 @@ export function canvas(w, h, fill = [12, 11, 16, 255]) {
           const tx = x + xx;
           if (tx < 0 || tx >= w) continue;
           const s = (yy * sw + xx) * 4, d = (ty * w + tx) * 4, a = src[s + 3] / 255;
-          for (let c = 0; c < 3; c++) data[d + c] = src[s + c] * a + data[d + c] * (1 - a);
-          data[d + 3] = Math.max(data[d + 3], src[s + 3]);
+          if (a === 0) continue;
+          // Straight (non-premultiplied) alpha-over: keep RGB divided by the output alpha, so a
+          // semi-transparent pixel pasted onto transparency keeps its color instead of darkening.
+          // Opaque destinations are unchanged: oa is 1, so this reduces to the old blend.
+          const da = data[d + 3] / 255, oa = a + da * (1 - a);
+          for (let c = 0; c < 3; c++) data[d + c] = (src[s + c] * a + data[d + c] * da * (1 - a)) / oa;
+          data[d + 3] = oa * 255;
         }
       }
     },
