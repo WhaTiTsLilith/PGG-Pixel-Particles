@@ -18,8 +18,10 @@ make good ones.
 
 ## Before anything
 
-1. Work in a pixelfx checkout. If the working directory has no `tools/render.mjs`, clone one next to the
-   project: `git clone https://github.com/patch-gg/pixelfx`. No install step: the tools use only Node.
+1. Work in a pixelfx checkout. If the working directory has no `tools/render.mjs` and the `PIXELFX_DIR`
+   environment variable is set, work in the checkout it points to, at the commit it is on: don't pull or switch
+   commits there. Otherwise clone one next to the project: `git clone https://github.com/patch-gg/pixelfx`. No
+   install step: the tools use only Node.
 2. Check it runs: `node tools/render.mjs fire/torch` writes `records/fire/torch/contact.png`. Open that PNG with
    your image-reading tool. That contact sheet is how you see every effect from now on.
 
